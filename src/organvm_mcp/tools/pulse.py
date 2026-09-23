@@ -229,8 +229,8 @@ def pulse_record_insight(
             category=category,
             content=content,
             tags=tags,
-            organ=organ,
-            repo=repo,
+            organ=organ or "",
+            repo=repo or "",
         )
         return insight.to_dict()
     except ImportError:
@@ -338,9 +338,10 @@ def pulse_edges(entity: str | None = None) -> dict[str, Any]:
     Optionally filter to edges involving a specific entity (by name or UID).
     """
     try:
-        from ontologia.registry.store import open_store
+        import importlib
 
-        store = open_store()
+        store_mod = importlib.import_module("ontologia.registry.store")
+        store = store_mod.open_store()
         ei = store.edge_index
         hierarchy = [e for e in ei.all_hierarchy_edges() if e.is_active()]
         relations = [e for e in ei.all_relation_edges() if e.is_active()]

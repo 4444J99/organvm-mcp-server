@@ -17,8 +17,8 @@ def _count_active() -> int:
 
         registry = load_registry()
         return sum(
-            1 for r in list_repos(registry)
-            if r.get("status") not in ("ARCHIVED", "DEPRECATED")
+            1 for _, repo in list_repos(registry)
+            if repo.get("status") not in ("ARCHIVED", "DEPRECATED")
         )
     except Exception:
         return 76  # fallback

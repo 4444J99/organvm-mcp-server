@@ -1,7 +1,6 @@
 # ORGANVM MCP Server
 
 [![CI](https://github.com/meta-organvm/organvm-mcp-server/actions/workflows/ci.yml/badge.svg)](https://github.com/meta-organvm/organvm-mcp-server/actions/workflows/ci.yml)
-[![PyPI version](https://img.shields.io/pypi/v/organvm-mcp-server.svg)](https://pypi.org/project/organvm-mcp-server/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
 Exposes the full ORGANVM system context, graph, metrics, and governance tools to any Claude Code session or Model Context Protocol (MCP) client.
@@ -33,30 +32,21 @@ Expected output:
 organvm-mcp v0.1.0: 142 tools registered successfully.
 ```
 
-Or via `pipx`:
-```bash
-pipx run organvm-mcp-server --verify
-```
-
 ---
 
 ## Installation
 
-### Option 1: From PyPI
-```bash
-pip install organvm-mcp-server
-```
-
-### Option 2: Using `pipx` (Recommended for isolated CLI)
-```bash
-pipx install organvm-mcp-server
-```
-
-### Option 3: Local / Development
+### Local / Editable Installation
 ```bash
 git clone https://github.com/meta-organvm/organvm-mcp-server.git
 cd organvm-mcp-server
 pip install -e ".[dev]"
+```
+
+Or build and install wheel locally:
+```bash
+python -m build
+pip install dist/organvm_mcp_server-0.1.0-py3-none-any.whl
 ```
 
 ---
@@ -80,13 +70,13 @@ Add `organvm` to your `~/.claude/mcp.json` (or project `.claude/mcp.json`):
 }
 ```
 
-If using a virtualenv or `pipx`, specify the full path:
+If using a specific virtual environment, specify the full executable path:
 
 ```json
 {
   "mcpServers": {
     "organvm": {
-      "command": "/usr/local/bin/organvm-mcp",
+      "command": "/path/to/venv/bin/organvm-mcp",
       "args": []
     }
   }
