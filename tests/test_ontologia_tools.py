@@ -9,11 +9,14 @@ from __future__ import annotations
 from unittest.mock import patch
 
 import pytest
-from ontologia.entity.identity import EntityType
-from ontologia.events import bus as ontologia_bus
-from ontologia.registry.store import RegistryStore
 
-from organvm_mcp.tools import ontologia
+ontologia_module = pytest.importorskip("ontologia")
+
+from ontologia.entity.identity import EntityType  # noqa: E402
+from ontologia.events import bus as ontologia_bus  # noqa: E402
+from ontologia.registry.store import RegistryStore  # noqa: E402
+
+from organvm_mcp.tools import ontologia  # noqa: E402
 
 
 @pytest.fixture(autouse=True)

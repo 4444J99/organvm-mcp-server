@@ -154,15 +154,17 @@ def corpus_gaps(
     for c in sorted(concepts, key=lambda x: x.uid):
         impls = [e for e in graph.edges_to(c.uid) if e.edge_type == "IMPLEMENTS"]
         count = len(impls)
+        sources = []
+        for e in impls:
+            snode = graph.get_node(e.source)
+            sources.append(snode.title if snode else e.source)
+
         entry = {
             "concept": c.title,
             "uid": c.uid,
             "description": c.metadata.get("description", ""),
             "implementation_count": count,
-            "sources": [
-                graph.get_node(e.source).title if graph.get_node(e.source) else e.source
-                for e in impls
-            ],
+            "sources": sources,
         }
         if count == 0:
             unimplemented.append(entry)

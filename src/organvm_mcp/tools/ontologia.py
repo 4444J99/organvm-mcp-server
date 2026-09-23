@@ -7,20 +7,26 @@ serialization. Degrades gracefully when ontologia is not installed.
 
 from __future__ import annotations
 
+import importlib
 from typing import Any
 
 
 def _check_available() -> dict[str, Any] | None:
     """Return error dict if ontologia is not installed, else None."""
     try:
-        from ontologia.registry.store import open_store  # noqa: F401
-
+        importlib.import_module("ontologia.registry.store")
         return None
     except ImportError:
         return {
             "error": "organvm-ontologia is not installed",
             "hint": "pip install -e ../organvm-ontologia/",
         }
+
+
+def _get_store() -> Any:
+    """Get initialized ontologia store via dynamic import."""
+    store_mod = importlib.import_module("ontologia.registry.store")
+    return store_mod.open_store()
 
 
 def ontologia_resolve(query: str) -> dict[str, Any]:
@@ -36,9 +42,7 @@ def ontologia_resolve(query: str) -> dict[str, Any]:
     if err:
         return err
 
-    from ontologia.registry.store import open_store
-
-    store = open_store()
+    store = _get_store()
     resolver = store.resolver()
     resolved = resolver.resolve(query)
 
@@ -73,14 +77,14 @@ def ontologia_list(
     if err:
         return err
 
-    from ontologia.entity.identity import EntityType
-    from ontologia.registry.store import open_store
+    id_mod = importlib.import_module("ontologia.entity.identity")
+    entity_type_cls = id_mod.EntityType
 
-    store = open_store()
+    store = _get_store()
     et = None
     if entity_type:
         try:
-            et = EntityType(entity_type)
+            et = entity_type_cls(entity_type)
         except ValueError:
             return {"error": f"Unknown entity type: {entity_type}"}
 
@@ -111,9 +115,7 @@ def ontologia_history(entity: str) -> dict[str, Any]:
     if err:
         return err
 
-    from ontologia.registry.store import open_store
-
-    store = open_store()
+    store = _get_store()
     resolver = store.resolver()
     resolved = resolver.resolve(entity)
 
@@ -149,9 +151,7 @@ def ontologia_events(limit: int = 20) -> dict[str, Any]:
     if err:
         return err
 
-    from ontologia.registry.store import open_store
-
-    store = open_store()
+    store = _get_store()
     events = store.events(limit=limit)
 
     return {
@@ -177,9 +177,7 @@ def ontologia_status() -> dict[str, Any]:
     if err:
         return err
 
-    from ontologia.registry.store import open_store
-
-    store = open_store()
+    store = _get_store()
     entities = store.list_entities()
     events = store.events(limit=1)
 

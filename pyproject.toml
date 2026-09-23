@@ -6,9 +6,29 @@ build-backend = "setuptools.build_meta"
 name = "organvm-mcp-server"
 version = "0.1.0"
 description = "MCP server exposing ORGANVM system context to any Claude Code session"
+readme = "README.md"
+license = "MIT"
+authors = [
+    { name = "ORGANVM Core Team" }
+]
+keywords = [
+    "mcp",
+    "claude-code",
+    "organvm",
+    "system-context",
+    "model-context-protocol"
+]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+]
 requires-python = ">=3.11"
 dependencies = [
-    "mcp>=1.0",
+    "mcp>=1.0.0,<2.0.0",
     "organvm-engine",
     "pyyaml>=6.0",
     "jsonschema>=4.20",
@@ -20,7 +40,14 @@ dev = [
     "pytest-asyncio>=0.21",
     "ruff>=0.1",
     "pyright>=1.1",
+    "build>=1.0.0",
 ]
+
+[project.urls]
+Homepage = "https://github.com/meta-organvm/organvm-mcp-server"
+Repository = "https://github.com/meta-organvm/organvm-mcp-server.git"
+Issues = "https://github.com/meta-organvm/organvm-mcp-server/issues"
+Documentation = "https://github.com/meta-organvm/organvm-mcp-server#readme"
 
 [project.scripts]
 organvm-mcp = "organvm_mcp.server:main"
@@ -34,7 +61,7 @@ target-version = "py311"
 
 [tool.ruff.lint]
 select = ["E", "F", "W", "I", "B", "PTH", "RET", "SIM", "COM", "PL"]
-ignore = ["PLR0912", "PLR0913", "PLR0915", "PLC0415", "PLR2004", "PLW0603"]
+ignore = ["PLR0912", "PLR0913", "PLR0915", "PLR0917", "PLC0415", "PLR2004", "PLW0603"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]

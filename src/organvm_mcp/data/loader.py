@@ -13,9 +13,13 @@ from __future__ import annotations
 
 import json
 from pathlib import Path
+from typing import TYPE_CHECKING
 
 import yaml
 from organvm_engine.paths import PathConfig, resolve_path_config
+
+if TYPE_CHECKING:
+    from organvm_engine.corpus.graph import CorpusGraph
 
 from organvm_mcp.data.paths import (
     atoms_data_dir,
@@ -34,7 +38,7 @@ _governance_rules_cache: dict[tuple[str, str], dict] = {}
 _system_metrics_cache: dict[tuple[str, str], dict] = {}
 _pipeline_manifest_cache: dict[tuple[str, str], dict] = {}
 _conversation_corpus_surfaces_cache: dict[tuple[str, str], dict] = {}
-_corpus_graph_cache: dict[tuple[str, str], object] = {}
+_corpus_graph_cache: dict[tuple[str, str], CorpusGraph] = {}
 
 
 def _cache_key(config: PathConfig | None = None) -> tuple[str, str]:
@@ -138,7 +142,7 @@ def load_conversation_corpus_surfaces(config: PathConfig | None = None) -> dict:
     return _conversation_corpus_surfaces_cache[key]
 
 
-def load_corpus_graph(config: PathConfig | None = None, live: bool = False):
+def load_corpus_graph(config: PathConfig | None = None, live: bool = False) -> CorpusGraph:
     """Load and cache the corpus knowledge graph.
 
     Args:

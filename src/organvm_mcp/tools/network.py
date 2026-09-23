@@ -17,8 +17,8 @@ def _count_active() -> int:
 
         registry = load_registry()
         return sum(
-            1 for r in list_repos(registry)
-            if r.get("status") not in ("ARCHIVED", "DEPRECATED")
+            1 for _, repo in list_repos(registry)
+            if repo.get("status") not in ("ARCHIVED", "DEPRECATED")
         )
     except Exception:
         return 76  # fallback
@@ -99,10 +99,8 @@ def network_suggest(repo: str | None = None) -> dict[str, Any]:
     from organvm_engine.network.metrics import (
         convergence_points,
         form_balance,
-        lens_balance,
         mirror_coverage,
     )
-    from organvm_engine.network.query import blind_spots
 
     maps = _load_maps()
     entries = read_ledger()

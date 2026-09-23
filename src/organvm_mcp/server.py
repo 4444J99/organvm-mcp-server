@@ -98,7 +98,9 @@ _RELEASE = ToolAnnotations(
     idempotentHint=True,
     openWorldHint=False,
 )
-"""Destructive release: punch-out, tool-checkin. Removes state. Idempotent (releasing twice is fine)."""
+"""Destructive release: punch-out, tool-checkin. Removes state.
+Idempotent (releasing twice is fine).
+"""
 
 _GENERATE = ToolAnnotations(
     readOnlyHint=False,
@@ -3079,7 +3081,16 @@ async def call_tool(name: str, arguments: dict) -> list[TextContent]:
 
 
 def main() -> None:
-    """Run the MCP server on stdio."""
+    """Run the MCP server on stdio or execute verification CLI check."""
+    import sys
+
+    from organvm_mcp import __version__
+
+    if any(arg in sys.argv for arg in ("--verify", "--check", "--version", "-v")):
+        tool_count = len(TOOLS)
+        print(f"organvm-mcp v{__version__}: {tool_count} tools registered successfully.")
+        sys.exit(0)
+
     import asyncio
 
     asyncio.run(_run())
