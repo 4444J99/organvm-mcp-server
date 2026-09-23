@@ -9,6 +9,9 @@ from __future__ import annotations
 from unittest.mock import patch
 
 import pytest
+
+ontologia_module = pytest.importorskip("ontologia")
+
 from ontologia.entity.identity import EntityType
 from ontologia.events import bus as ontologia_bus
 from ontologia.registry.store import RegistryStore

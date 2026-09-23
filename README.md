@@ -1,44 +1,73 @@
 # ORGANVM MCP Server
 
-Exposes the full ORGANVM system context to any Claude Code session.
+[![CI](https://github.com/meta-organvm/organvm-mcp-server/actions/workflows/ci.yml/badge.svg)](https://github.com/meta-organvm/organvm-mcp-server/actions/workflows/ci.yml)
+[![PyPI version](https://img.shields.io/pypi/v/organvm-mcp-server.svg)](https://pypi.org/project/organvm-mcp-server/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+
+Exposes the full ORGANVM system context, graph, metrics, and governance tools to any Claude Code session or Model Context Protocol (MCP) client.
 
 ## Overview
 
-The `organvm-mcp-server` is a local infrastructure component that allows AI assistants working in *any* repository (within or outside the 8-organ system) to query live metadata about the entire ecosystem.
+The `organvm-mcp-server` is a core system infrastructure component that allows AI assistants working in *any* repository (within or outside the 8-organ system) to query live metadata about the entire ecosystem via standard stdio JSON-RPC transport.
 
-It provides a unified view of:
-- **Registry**: Repository metadata, status, and tiers.
-- **Seeds**: Automation contracts, produces/consumes edges.
-- **Graph**: Dependency relationships and inter-organ flow.
-- **Health**: System-wide health metrics and Omega status.
-- **Context**: Tailored awareness for the current working directory.
-- **Conversation Corpus Surfaces**: Governed CCE exports with validation state and provider readiness.
+It provides a unified interface to:
+- **Registry & Organs**: Repository metadata, status, promotion pipelines, and tier classifications.
+- **Seeds & Edges**: Automation contracts, produces/consumes data edges, and event catalogs.
+- **Dependency Graph**: Inter-organ relationships, unidirectional flow rules, and blast radius analysis.
+- **System Health & Omega Criteria**: Real-time health metrics, CI status, and transition progress.
+- **Context & Session Memory**: Working directory context, shared cross-agent memory, and SOP discovery.
+- **Corpus & Ontologia**: Knowledge graph concepts, entity resolution, and structural registry.
 
-## Tools Provided
+---
 
-- `organvm_query_registry`: Search and filter repos in the system.
-- `organvm_get_repo`: Get full details for a specific repository.
-- `organvm_list_organs`: Get summary stats for all 8 organs.
-- `organvm_get_seed`: Read the automation contract for a repo.
-- `organvm_find_edges`: Discover produces/consumes relationships.
-- `organvm_get_event_contract`: Look up event schemas from the catalog.
-- `organvm_trace_dependencies`: Traverse the dependency graph.
-- `organvm_check_dependency`: Validate if a relationship is allowed by governance.
-- `organvm_system_health`: Get a high-level health report.
-- `organvm_omega_status`: Track transition criteria progress.
-- `organvm_get_context`: **Primary Tool** — Get everything relevant to your current repo.
-- `organvm_conversation_corpus_surfaces`: Inspect exported conversation-memory surfaces and their validation state.
+## One-Command Verification
+
+To verify that `organvm-mcp-server` is correctly installed and ready to serve tools:
+
+```bash
+organvm-mcp --verify
+```
+
+Expected output:
+```text
+organvm-mcp v0.1.0: 142 tools registered successfully.
+```
+
+Or via `pipx`:
+```bash
+pipx run organvm-mcp-server --verify
+```
+
+---
 
 ## Installation
 
+### Option 1: From PyPI
 ```bash
-cd /Users/4jp/Workspace/meta-organvm/organvm-mcp-server
-pip install -e .
+pip install organvm-mcp-server
 ```
 
-## Configuration
+### Option 2: Using `pipx` (Recommended for isolated CLI)
+```bash
+pipx install organvm-mcp-server
+```
 
-Add to your `~/.claude/mcp.json` (or equivalent AI editor config):
+### Option 3: Local / Development
+```bash
+git clone https://github.com/meta-organvm/organvm-mcp-server.git
+cd organvm-mcp-server
+pip install -e ".[dev]"
+```
+
+---
+
+## Endpoint & Authentication Setup
+
+`organvm-mcp-server` operates locally using standard `stdio` transport. No external auth token or network port configuration is required for standard stdio usage.
+
+### Claude Code Configuration
+
+Add `organvm` to your `~/.claude/mcp.json` (or project `.claude/mcp.json`):
 
 ```json
 {
@@ -51,7 +80,72 @@ Add to your `~/.claude/mcp.json` (or equivalent AI editor config):
 }
 ```
 
-## Development
+If using a virtualenv or `pipx`, specify the full path:
 
-- **Run tests (stubs)**: `pytest tests/`
-- **MCP Inspector**: `mcp dev src/organvm_mcp/server.py`
+```json
+{
+  "mcpServers": {
+    "organvm": {
+      "command": "/usr/local/bin/organvm-mcp",
+      "args": []
+    }
+  }
+}
+```
+
+### Cursor / Windsurf / Other MCP Clients
+
+Configure as a stdio server:
+- **Server Name**: `organvm`
+- **Command**: `organvm-mcp`
+- **Transport**: `stdio`
+
+### Environment Variables (Optional)
+
+| Variable | Description | Default |
+|----------|-------------|---------|
+| `ORGANVM_ROOT` | Path to the workspace root directory | Auto-detected from working directory |
+| `ORGANVM_REGISTRY_PATH` | Path to `registry-v2.json` | Relative to workspace root |
+
+---
+
+## Tools Provided
+
+142 total tools organized across domain modules:
+
+- `organvm_get_context`: **Primary Context Tool** — Auto-detects working directory and returns repo, organ, edge, and governance details.
+- `organvm_query_registry`: Search and filter repositories by organ, tier, or status.
+- `organvm_get_repo`: Retrieve details for a specific repository.
+- `organvm_list_organs`: Summary statistics for all 8 system organs.
+- `organvm_get_seed` / `organvm_find_edges`: Read automation contracts and trace produces/consumes data streams.
+- `organvm_trace_dependencies`: Upstream and downstream dependency graph traversal.
+- `organvm_system_health` / `organvm_omega_status`: High-level system health metrics and transition progress.
+- `organvm_governance_audit` / `organvm_check_dependency`: Enforce governance policies and unidirectional flow rules.
+- `organvm_pulse_mood` / `organvm_pulse_briefing`: System sentiment and cross-session briefing.
+- `organvm_sop_discover` / `organvm_sop_resolve`: Discover and resolve applicable SOPs.
+
+---
+
+## Development & Testing
+
+Run unit tests and verification:
+
+```bash
+# Run pytest test suite
+pytest tests/ -v
+
+# Run lint checks
+ruff check src/ tests/
+
+# Run type checks
+pyright src/
+
+# Run via MCP inspector
+mcp dev src/organvm_mcp/server.py
+```
+
+---
+
+## License
+
+[MIT](LICENSE)
