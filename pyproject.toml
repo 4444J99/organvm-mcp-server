@@ -61,7 +61,7 @@ target-version = "py311"
 
 [tool.ruff.lint]
 select = ["E", "F", "W", "I", "B", "PTH", "RET", "SIM", "COM", "PL"]
-ignore = ["PLR0912", "PLR0913", "PLR0915", "PLC0415", "PLR2004", "PLW0603"]
+ignore = ["PLR0912", "PLR0913", "PLR0915", "PLR0917", "PLC0415", "PLR2004", "PLW0603"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]

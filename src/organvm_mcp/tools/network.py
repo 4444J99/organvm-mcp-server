@@ -99,10 +99,8 @@ def network_suggest(repo: str | None = None) -> dict[str, Any]:
     from organvm_engine.network.metrics import (
         convergence_points,
         form_balance,
-        lens_balance,
         mirror_coverage,
     )
-    from organvm_engine.network.query import blind_spots
 
     maps = _load_maps()
     entries = read_ledger()
